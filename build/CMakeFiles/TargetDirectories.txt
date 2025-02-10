@@ -1,0 +1,3 @@
+/Users/user/Desktop/School/Spring 2025/Operating Systems/Project/Operating-System/build/CMakeFiles/fltk_app.dir
+/Users/user/Desktop/School/Spring 2025/Operating Systems/Project/Operating-System/build/CMakeFiles/edit_cache.dir
+/Users/user/Desktop/School/Spring 2025/Operating Systems/Project/Operating-System/build/CMakeFiles/rebuild_cache.dir

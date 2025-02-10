@@ -1,0 +1,12 @@
+cmake_minimum_required(VERSION 3.10)
+project(FLTKProject)
+
+find_package(FLTK REQUIRED)
+
+# Manually set the include and library paths
+include_directories(/opt/homebrew/opt/fltk/include)
+link_directories(/opt/homebrew/opt/fltk/lib)
+
+add_executable(fltk_app main.cpp)
+
+target_link_libraries(fltk_app PRIVATE ${FLTK_LIBRARIES} fltk fltk_forms fltk_images fltk_gl)
