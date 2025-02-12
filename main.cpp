@@ -4,7 +4,7 @@
 int main() {
     Fl::scheme("plastic");  // Ensures proper rendering on macOS
 
-    show_boot_animation("Starting System...");
+    show_boot_animation("Booting System...");
 
     // Create the global main window
     main_window = new Fl_Window(700, 500, "Main Window");
