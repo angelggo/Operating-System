@@ -1,12 +1,27 @@
 cmake_minimum_required(VERSION 3.10)
-project(FLTKProject)
+project(fltk_app)
 
-find_package(FLTK REQUIRED)
+# Detect the operating system
+if(APPLE)
+    # macOS specific settings
+    find_package(FLTK REQUIRED)
+    include_directories(/opt/homebrew/opt/fltk/include)
+    link_directories(/opt/homebrew/opt/fltk/lib)
 
-# Manually set the include and library paths
-include_directories(/opt/homebrew/opt/fltk/include)
-link_directories(/opt/homebrew/opt/fltk/lib)
+elseif(WIN32)
+    # Windows specific settings
+    set(FLTK_DIR "C:/FLTK/fltk-1.4.1-source/fltk-1.4.1/build")
+    find_package(FLTK REQUIRED)
+    include_directories(${FLTK_INCLUDE_DIRS})
 
-add_executable(fltk_app main.cpp)
+    # Ensure Windows builds properly
+    if(MSVC)
+        add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+    endif()
+endif()
 
+# Ensure both source files are included in the build
+add_executable(fltk_app main.cpp functions.cpp)  # <-- Added functions.cpp
+
+# Link FLTK libraries (common for both platforms)
 target_link_libraries(fltk_app PRIVATE ${FLTK_LIBRARIES} fltk fltk_forms fltk_images fltk_gl)

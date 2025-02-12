@@ -8,6 +8,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
+  "/Users/user/Desktop/School/Spring 2025/Operating Systems/Project/Operating-System/functions.cpp" "CMakeFiles/fltk_app.dir/functions.cpp.o" "gcc" "CMakeFiles/fltk_app.dir/functions.cpp.o.d"
   "/Users/user/Desktop/School/Spring 2025/Operating Systems/Project/Operating-System/main.cpp" "CMakeFiles/fltk_app.dir/main.cpp.o" "gcc" "CMakeFiles/fltk_app.dir/main.cpp.o.d"
   )
 

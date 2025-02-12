@@ -146,7 +146,7 @@ CMAKE_PROJECT_DESCRIPTION:STATIC=
 CMAKE_PROJECT_HOMEPAGE_URL:STATIC=
 
 //Value Computed by CMake
-CMAKE_PROJECT_NAME:STATIC=FLTKProject
+CMAKE_PROJECT_NAME:STATIC=fltk_app
 
 //Path to a program.
 CMAKE_RANLIB:FILEPATH=/Library/Developer/CommandLineTools/usr/bin/ranlib
@@ -678,6 +678,15 @@ X11_xkbfile_INCLUDE_PATH:PATH=X11_xkbfile_INCLUDE_PATH-NOTFOUND
 
 //Path to a library.
 X11_xkbfile_LIB:FILEPATH=X11_xkbfile_LIB-NOTFOUND
+
+//Value Computed by CMake
+fltk_app_BINARY_DIR:STATIC=/Users/user/Desktop/School/Spring 2025/Operating Systems/Project/Operating-System/build
+
+//Value Computed by CMake
+fltk_app_IS_TOP_LEVEL:STATIC=ON
+
+//Value Computed by CMake
+fltk_app_SOURCE_DIR:STATIC=/Users/user/Desktop/School/Spring 2025/Operating Systems/Project/Operating-System
 
 
 ########################

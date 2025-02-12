@@ -1,4 +1,6 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/fltk_app.dir/functions.cpp.o"
+  "CMakeFiles/fltk_app.dir/functions.cpp.o.d"
   "CMakeFiles/fltk_app.dir/main.cpp.o"
   "CMakeFiles/fltk_app.dir/main.cpp.o.d"
   "fltk_app"
