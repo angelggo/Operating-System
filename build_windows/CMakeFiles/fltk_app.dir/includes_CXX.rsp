@@ -1,0 +1,1 @@
+-I"C:/FLTK/fltk-1.4.1-source/fltk-1.4.1/build" -I"C:/FLTK/fltk-1.4.1-source/fltk-1.4.1" -isystem "C:/FLTK/fltk-1.4.1-source/fltk-1.4.1/jpeg" -isystem "C:/FLTK/fltk-1.4.1-source/fltk-1.4.1/build/src/.." -isystem "C:/FLTK/fltk-1.4.1-source/fltk-1.4.1/src/.."
