@@ -2,21 +2,19 @@
 #include <FL/Fl.H>
 #include <FL/Fl_Progress.H>
 #include <iostream>
+#include <thread>  // For sleep_for
+#include <chrono>  // For milliseconds
 
 // Global main window definition
 Fl_Window* main_window;
 
-// Boot Progress Bar
-Fl_Progress* progress;
-float progress_value = 0.0f;
-
-// **Boot Animation Function**
+// **Boot Animation Function (Fixed for Windows)**
 void show_boot_animation(const std::string& animationLabel) {
     Fl_Window boot_window(400, 200, "Booting...");
     boot_window.color(FL_WHITE);
 
     // Create Progress Bar
-    progress = new Fl_Progress(50, 80, 300, 30);
+    Fl_Progress* progress = new Fl_Progress(50, 80, 300, 30);
     progress->minimum(0.0f);
     progress->maximum(1.0f);
     progress->value(0.0f);
@@ -24,11 +22,16 @@ void show_boot_animation(const std::string& animationLabel) {
 
     boot_window.show();
 
+    float progress_value = 0.0f;  // Reset progress value before animation loop
     while (progress_value < 1.0f) {
         progress_value += 0.1f;
+        if (progress_value > 1.0f) progress_value = 1.0f;
         progress->value(progress_value);
         progress->redraw();
-        Fl::wait(0.1);
+        Fl::check();  // Process FLTK events
+
+        // **Fix timing issue across platforms**
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));  
     }
 
     boot_window.hide();
