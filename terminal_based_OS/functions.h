@@ -7,6 +7,8 @@
 #include <chrono>
 #include <thread>
 #include <filesystem>
+#include "ProcessManager.h"
+
 
 #ifdef _WIN32
     #include <conio.h> // For Windows input handling
@@ -27,6 +29,9 @@ void displayAsciiArt(const std::string& folderName, const std::string& fileName)
 void displayBootingAnimation();
 std::string getPassword();
 void displayLogin(std::string* username, std::string* password);
-void idle(std::string* command);
+void idle(std::string* command, ProcessManager manager);
+void displayCommands();
+void displayProcessAnimation();
+
 
 #endif // FUNCTIONS_H

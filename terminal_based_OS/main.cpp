@@ -1,6 +1,13 @@
 #include "functions.h"
+#include "ProcessManager.h"
 
 int main() {
+
+    ProcessManager manager;
+    manager.createProcess("ProcessA");
+    manager.createProcess("ProcessB");
+
+
     std::string command;
 
     displayBootingAnimation();
@@ -9,6 +16,7 @@ int main() {
     clearScreen();
     displayAsciiArt("art_folder", "welcome_art.txt");
 
-    idle(&command);
+    idle(&command, manager);
+
     return 0;
 }

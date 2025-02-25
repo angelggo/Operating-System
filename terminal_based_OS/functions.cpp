@@ -1,4 +1,8 @@
 #include "functions.h"
+#include "Process.h"
+#include <cstdlib>
+#include <ctime>
+#include "ProcessManager.h"
 
 // Define global variables
 std::string USERNAME;
@@ -78,19 +82,92 @@ void displayLogin(std::string* username, std::string* password) {
 }
 
 // **Idle Terminal Function**
-void idle(std::string* command) {
+void idle(std::string* command, ProcessManager manager) {
     std::string username = USERNAME;  
     std::string systemName = "doors";
+
+    std::cout << "Enter ? for help" << std::endl;
 
     while (true) {
         std::cout << username << "@" << systemName << " ~ % ";
         std::getline(std::cin, *command);
 
-        if (*command == "exit") {
-            std::cout << "Exiting terminal...\n";
+        if (*command == "exit" || *command == "x") {
+            std::cout << "Shutting Down...\n";
+            std::this_thread::sleep_for(std::chrono::seconds(1));
             exit(0);
-        }
+        } else if (*command == "Process"){
+            srand(time(nullptr));
 
-        std::cout << "Command received: " << *command << std::endl;
+        } else if (*command == "?"){
+            displayCommands();
+        } else if (*command == "c" || *command == "clear") {
+            clearScreen();
+        } else if (*command == "v" || *command == "version") {
+            std::cout << "OS version 1.44" << std::endl;
+        } else if (*command == "r" || *command == "restart") {
+            std::string command;
+
+            displayBootingAnimation();
+            displayLogin(&USERNAME, &PASSWORD);
+
+            clearScreen();
+            displayAsciiArt("art_folder", "welcome_art.txt");
+
+            idle(&command, manager);
+        } else if (*command == "p ls" || *command == "P ls") {
+            manager.displayAllProcesses();
+        } else if (command->substr(0, 3) == "rp ") {  // Handle "rp <name>" command
+            std::string processName = command->substr(3);  // Extract process name after "rp "
+            if (!processName.empty()) {
+                manager.runProcess(processName);
+            } else {
+                std::cout << "Error: Please specify a process name.\n";
+            }
+        } else if (command->substr(0, 3) == "pd ") {  // Handle "pd <name>" command
+            std::string processName = command->substr(3);  // Extract process name after "pd "
+            if (!processName.empty()) {
+                manager.displayProcessInfo(processName);
+            } else {
+                std::cout << "Error: Please specify a process name.\n";
+            }
+        } else {
+            std::cout << "zsh: Command not found: " << *command << std::endl;
+        }
     }
+}
+
+
+
+void displayCommands() {
+    std::cout << "Available Commands:\n";
+    std::cout << "  exit or x            - Shut Down OS\n";
+    std::cout << "  rp <processName>     - Run a specific process\n";
+    std::cout << "  pd <processName>     - Show details of a specific process\n";
+    std::cout << "  p ls                 - Display the list of available processes\n";
+    std::cout << "  ?                    - Show this command list\n";
+    std::cout << "  clear or c           - Clear the screen\n";
+    std::cout << "  version or v         - Show OS version\n";
+    std::cout << "  restart or r         - Restart the program\n";
+    std::cout << "--------------------------------------\n";
+}
+
+
+void displayProcessAnimation(){
+    std::srand(std::time(0));  // Seed the random number generator
+    int randomNumber = std::rand() % 2 + 1;  // Generates 1 or 2
+
+     std::string folderPath = "art_folder";
+
+     for (int i = 0; i <= 2; i++) {
+
+        for (int j = 1; j<=3; j++){
+            std::string fileName = "Process_" +std::to_string(randomNumber) + "_loading_" + std::to_string(j) +  ".txt"; 
+            displayAsciiArt(folderPath, fileName);
+            std::this_thread::sleep_for(std::chrono::seconds(1));
+            clearScreen();
+        }
+    }
+
+
 }
