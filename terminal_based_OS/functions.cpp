@@ -116,7 +116,7 @@ void idle(std::string* command, ProcessManager manager) {
 
             idle(&command, manager);
         } else if (*command == "p ls" || *command == "P ls") {
-            manager.displayAllProcesses();
+            manager.displayProcessVector(manager.processes);
         } else if (command->substr(0, 3) == "rp ") {  // Handle "rp <name>" command
             std::string processName = command->substr(3);  // Extract process name after "rp "
             if (!processName.empty()) {
@@ -131,10 +131,18 @@ void idle(std::string* command, ProcessManager manager) {
             } else {
                 std::cout << "Error: Please specify a process name.\n";
             }
-        } else {
+        } else if (*command == "TaskManager" || *command =="taskmanager") {
+            manager.runTasks();
+            
+            
+        }  else {
             std::cout << "zsh: Command not found: " << *command << std::endl;
         }
     }
+}
+
+void screenSleep(int amount){
+    std::this_thread::sleep_for(std::chrono::milliseconds(amount));
 }
 
 
@@ -142,6 +150,7 @@ void idle(std::string* command, ProcessManager manager) {
 void displayCommands() {
     std::cout << "Available Commands:\n";
     std::cout << "  exit or x            - Shut Down OS\n";
+    std::cout << "  TaskManager          - Display all process running.\n";
     std::cout << "  rp <processName>     - Run a specific process\n";
     std::cout << "  pd <processName>     - Show details of a specific process\n";
     std::cout << "  p ls                 - Display the list of available processes\n";

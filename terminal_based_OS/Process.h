@@ -11,10 +11,22 @@ public:
     void displayInfo() const;
     void run();  // Simulates running the process
     void updateState(const std::string& newState);
+    void updateRemainingTime(const int newRemainingTime);
+    void decrementRemainingTime();
+
 
     std::string getName() const { return name; }
     int getPid() const { return pid; }
     long long getArrivalTime() const { return arrival_time; }
+    int getBurstTime() const {return burst_time;}
+    std::string getState() const {return state; }
+    int getRemainingTime() const {return remaining_time;}
+    int getWaitingTime() const {return waiting_time;}
+    int getMemoryRequired() const {return memory_required;}
+    int getTurnaroundTime() const {return turnaround_time;}
+    int getPriority() const {return priority;}
+
+    
 
 private:
     int pid;
@@ -31,7 +43,8 @@ private:
     bool io_operations;
 
     static int generateUniquePid();
-    static int generateRandomValue(int min, int max);  // Helper function to generate random values
+    // Declaration with the default argument
+    static int generateRandomValue(int min, int max, int multiple = 0);
 };
 
 #endif

@@ -32,6 +32,7 @@ void displayLogin(std::string* username, std::string* password);
 void idle(std::string* command, ProcessManager manager);
 void displayCommands();
 void displayProcessAnimation();
+void screenSleep(int amount);
 
 
 #endif // FUNCTIONS_H
