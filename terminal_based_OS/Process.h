@@ -17,7 +17,7 @@ public:
 
     std::string getName() const { return name; }
     int getPid() const { return pid; }
-    long long getArrivalTime() const { return arrival_time; }
+    int getArrivalTime() const { return arrival_time; }
     int getBurstTime() const {return burst_time;}
     std::string getState() const {return state; }
     int getRemainingTime() const {return remaining_time;}
@@ -25,6 +25,10 @@ public:
     int getMemoryRequired() const {return memory_required;}
     int getTurnaroundTime() const {return turnaround_time;}
     int getPriority() const {return priority;}
+
+    void setArrivalTime(int amt);
+    void setTurnAroundTime(int amt);
+    void setWaitingTime(int amt);
 
     
 

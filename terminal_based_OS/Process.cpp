@@ -40,13 +40,8 @@ Process::Process(const std::string& process_name)
     : name(process_name), state("Ready"), waiting_time(0), turnaround_time(0) {
     pid = generateUniquePid();
 
-    // Get current system time
-    auto now = std::chrono::system_clock::now();
-    auto time_t_now = std::chrono::system_clock::to_time_t(now);
-    arrival_time = static_cast<long long>(time_t_now);  // Store as timestamp if needed
-
     // Initialize randomized values
-    burst_time = generateRandomValue(1, 100, 10);           // Random burst time between 1 and 100 ms
+    burst_time = generateRandomValue(1, 10);           // Random burst time between 1 and 100 ms
     priority = generateRandomValue(1, 10);              // Random priority between 1 and 10
     remaining_time = burst_time;
     memory_required = generateRandomValue(4, 512);      // Random memory required between 4 MB and 512 MB
@@ -112,7 +107,7 @@ void Process::run() {
 // Updates the state of the process
 void Process::updateState(const std::string& newState) {
     state = newState;
-    std::cout << "Process " << name << " changed state to: " << state << "\n";
+    
 }
 
 void Process::updateRemainingTime(const int newRemainingTime){
@@ -121,5 +116,17 @@ void Process::updateRemainingTime(const int newRemainingTime){
 }
 
 void Process::decrementRemainingTime(){
-    remaining_time -= 10;
+    remaining_time -= 1;
+}
+
+void Process::setArrivalTime(int amt){
+    arrival_time = amt;
+}
+
+void Process::setTurnAroundTime(int amt){
+    turnaround_time = amt;
+}
+
+void Process::setWaitingTime(int amt){
+    waiting_time = amt;
 }

@@ -46,7 +46,7 @@ void ProcessManager::moveProcessesToReadyQueue() {
     // Move only "Ready" state processes that are NOT already in the ready queue
     for (const Process& p : processes) {  
         if (p.getState() == "Ready" && readyPIDs.find(p.getPid()) == readyPIDs.end()) { 
-            readyQueue.push(p); // ✅ Push into the priority queue (auto-sorted by burst time)
+            readyQueue.push(p); // Push into the priority queue (auto-sorted by burst time)
             std::cout << "[READY] " << p.getName() << " (PID: " << p.getPid() << ") moved to Ready Queue.\n";
         }
     }
@@ -94,17 +94,18 @@ void ProcessManager::runTasks() {
     int processCounter = 0;
     cycles = 0;
     
-    while (cycles < 30) {
+    while (cycles < 33) {
         clearScreen();
         screenSleep(1000);
 
 
         //cheks if 5 cycles have past if so, then creates new process and displays all proces information
         //aswell as a message indicating process creation was sucessfull.
-        if (cycles % 5 == 0) {
+        if (cycles % 10 == 0) {
             processCounter++;
             std::string processName = "Process_" + std::to_string(processCounter);
             createProcess(processName);
+            setArrivalTime(processName, cycles);
             moveProcessesToReadyQueue();
 
 
@@ -114,10 +115,10 @@ void ProcessManager::runTasks() {
             displayProcesesWhileExecution();
         
             // Output the currently running process
-            std::cout << "\nNew Process Created: " << processName<< ")\n";
+            std::cout << "\nNew Process Created: " << processName<< "\n";
 
 
-            screenSleep(4000);
+            screenSleep(3000);
         }
 
         // Extract the process with the shortest remaining time from the ready queue
@@ -127,16 +128,38 @@ void ProcessManager::runTasks() {
         //What this does is peretty much just decrement the remaiing time as a simulation it is underestood
         //that when a process is running the ramiaingrunningtime would lower.
         runProcess(currentRunningProcess);
+        cycles ++;
+        incrementWaitingTimeForReadyProcesses();
 
         // If the process still has remaining time, push it back into the ready queue
         if (currentRunningProcess.getRemainingTime() > 0) {
+
+            // Display cycle information and process status
+            clearScreen();
+            
+            
+            std::cout << "Cycle: " << cycles << "\n";
+            displayProcesesWhileExecution();
+            // Output the currently running process
+            std::cout << "\nCurrently Running Process: " << currentRunningProcess.getName() << " (PID: " << currentRunningProcess.getPid() << ")\n";
+
+            screenSleep(1000);
+
+
+
+            currentRunningProcess.updateState("Ready");
             readyQueue.push(currentRunningProcess);  // Re-push it if it still needs to run
+
+
+
+            
         } else {
             // If the process is finished (remaining time is 0), update its state to "Terminated"
             currentRunningProcess.updateState("Terminated");
             for (Process& p : processes) { // Use reference (&) to modify the actual object
                 if (p.getPid() == currentRunningProcess.getPid()) {
                     p.updateState("Terminated");
+                    p.setTurnAroundTime(p.getBurstTime() + p.getWaitingTime());
                     break;            // Stop searching after finding it
                 }
             }
@@ -148,20 +171,12 @@ void ProcessManager::runTasks() {
             displayProcesesWhileExecution();
 
             std::cout << "\nTerminated Process: " << currentRunningProcess.getName() << " (PID: " << currentRunningProcess.getPid() << ")\n";
-            screenSleep(3000);
+            screenSleep(2500);
         }
-
-        // Display cycle information and process status
-        clearScreen();
-        cycles++;
-        std::cout << "Cycle: " << cycles << "\n";
-        displayProcesesWhileExecution();
-        
-        // Output the currently running process
-        std::cout << "\nCurrently Running Process: " << currentRunningProcess.getName() << " (PID: " << currentRunningProcess.getPid() << ")\n";
-
-        screenSleep(1000);
     }
+
+    std::cout << "\nAverage Waiting time: " << std::to_string(getAverageWaitingTime()) 
+            << "\n" << "Average Turnaround time: " << std::to_string(getAverageTurnAroundTime()) << "\n";
 }
 
 
@@ -192,7 +207,8 @@ void ProcessManager::displayProcesesWhileExecution(){
                   << std::setw(15) << "Memory Req."
                   << std::setw(15) << "Waiting Time"
                   << std::setw(15) << "Turnaround Time"
-                  << "\n----------------------------------------------------------------------------------------------------------------\n";
+                  << std::setw(20) << "Arrival Time"
+                  << "\n--------------------------------------------------------------------------------------------------------------------------------\n";
 
     for (Process& p : processes) {
             std::cout << std::setw(15) << p.getName()
@@ -204,6 +220,7 @@ void ProcessManager::displayProcesesWhileExecution(){
                       << std::setw(15) << p.getMemoryRequired()
                       << std::setw(15) << p.getWaitingTime()
                       << std::setw(15) << p.getTurnaroundTime()
+                      << std::setw(20) << p.getArrivalTime()
                       << "\n";
         }
     
@@ -238,4 +255,96 @@ Process ProcessManager::extractShortestRemainingTimeProcess() {
     }
 
     return shortestRemainingTimeProcess; // Return the process with the shortest remaining time
+}
+
+void ProcessManager::setArrivalTime(std::string processName, int amt){
+    for (Process& p : processes) { // Use reference (&) to modify the actual object
+            if (p.getName() == processName) {
+                p.setArrivalTime(amt);
+                break;            // Stop searching after finding it
+            }
+        }
+}
+
+void ProcessManager::setTurnAroundTime(std:: string processName, int amt){
+    for (Process& p : processes) { // Use reference (&) to modify the actual object
+            if (p.getName() == processName) {
+                p.setTurnAroundTime(amt);
+                break;            // Stop searching after finding it
+            }
+        }
+}
+
+
+void ProcessManager::setWaitingTime(std:: string processName, int amt){
+    for (Process& p : processes) { // Use reference (&) to modify the actual object
+            if (p.getName() == processName) {
+                p.setWaitingTime(amt);
+                break;            // Stop searching after finding it
+            }
+        }
+}
+
+
+void ProcessManager::incrementWaitingTimeForReadyProcesses() {
+    std::priority_queue<Process, std::vector<Process>, CompareProcess> tempQueue;
+    
+    // Process each element in readyQueue
+    while (!readyQueue.empty()) {
+        Process p = readyQueue.top();  // Get the top process
+        readyQueue.pop();  // Remove it from the queue
+        
+        // Increment waiting time if the process is in the "Ready" state
+        if (p.getState() == "Ready") {
+            p.setWaitingTime(p.getWaitingTime() + 1);  // Increment by 1
+
+            for (Process& pro : processes) { // Use reference (&) to modify the actual object
+            if (pro.getName() == p.getName()) {
+                pro.setWaitingTime(pro.getWaitingTime() + 1);
+                break;            // Stop searching after finding it
+            }
+        }
+
+        }
+
+        // Store the modified process in the temporary queue
+        tempQueue.push(p);
+    }
+
+    // Restore the modified queue back into readyQueue
+    readyQueue = std::move(tempQueue);
+    
+
+}
+
+float ProcessManager:: getAverageWaitingTime(){
+    int totalWaitTime = 0;
+    int totalNumberOfProcess = 0;
+    float averageWaitingTime;
+
+    for (Process& p : processes) { 
+        totalNumberOfProcess ++;
+        int currentProcessWaitTime = p.getWaitingTime();
+        totalWaitTime += currentProcessWaitTime;
+    }
+
+    averageWaitingTime = (float)totalWaitTime/totalNumberOfProcess;
+    return averageWaitingTime;
+        
+}
+
+float ProcessManager::getAverageTurnAroundTime(){
+    int totalAverateTurnAroundTime = 0;
+    int totalNumberOfProcess = 0;
+    float averageTurnAroundTime;
+
+    for (Process& p : processes) { 
+        totalNumberOfProcess ++;
+        int currentProcessTurnAroundTime = p.getTurnaroundTime();
+        totalAverateTurnAroundTime += currentProcessTurnAroundTime;
+    }
+
+    averageTurnAroundTime = (float)totalAverateTurnAroundTime / totalNumberOfProcess;
+    return averageTurnAroundTime;
+
 }

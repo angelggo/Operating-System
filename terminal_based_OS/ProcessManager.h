@@ -21,6 +21,8 @@ public:
     template <typename Container>
     void displayAllProcesses(const Container& processes) const;
 
+
+
     int cycles = 0;
     void createProcess(const std::string& name);  
     void displayProcessInfo(const std::string& name) const;
@@ -30,6 +32,14 @@ public:
     void runTasks();
     void runProcess(Process& process);
     void displayProcesesWhileExecution();
+    void setArrivalTime(std::string processName, int amt);
+    void setWaitingTime(std::string processName, int amt);
+    void setTurnAroundTime(std::string processName, int amt);
+    void incrementWaitingTimeForReadyProcesses();
+
+    float getAverageWaitingTime();
+    float getAverageTurnAroundTime();
+
     Process extractShortestRemainingTimeProcess();
 
     std::vector<Process> processes;

@@ -5,7 +5,9 @@ int main() {
 
     ProcessManager manager;
     manager.createProcess("ProcessA");
+    manager.setArrivalTime("ProcessA", 0);
     manager.createProcess("ProcessB");
+    manager.setArrivalTime("ProcessB", 0);
 
 
     std::string command;
