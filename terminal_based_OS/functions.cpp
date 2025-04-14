@@ -3,10 +3,13 @@
 #include <cstdlib>
 #include <ctime>
 #include "ProcessManager.h"
+#include "config.h"
 
 // Define global variables
 std::string USERNAME;
 std::string PASSWORD;
+
+
 
 // **Clear Screen Function**
 void clearScreen() {
@@ -179,4 +182,46 @@ void displayProcessAnimation(){
     }
 
 
+}
+
+// functiong to allocate the entries of the page table
+void allocatePageTable(Process& proc, int numPages, int& nextFreeFrame) {
+    for (int i = 0; i < numPages; ++i) {
+        PageTableEntry entry;
+        entry.frameNumber = nextFreeFrame++;
+        entry.valid = true;     // It’s mapped
+        entry.dirty = false;    // Hasn’t been written yet
+
+        proc.pageTable.entries[i] = entry;  // i is the VPN
+    }
+}
+
+void translateVirtualToPhysicalMemory(Process& process, int virtualAddress) {
+    int vpn = virtualAddress / PAGE_SIZE;
+
+    if (process.pageTable.entries.count(vpn) && process.pageTable.entries[vpn].valid) {
+        int frame = process.pageTable.entries[vpn].frameNumber;
+        int offset = virtualAddress % PAGE_SIZE;
+        int physicalAddress = (frame * PAGE_SIZE) + offset;
+        
+        std::cout << "\nVIRTUAL MEMORY STATUS:\n";
+        std::cout << "Virtual Memory Required for current Cycle: " << virtualAddress << "\n";
+        std::cout << "Frame: " << frame << "\n";
+        std::cout << "Offset: " << offset << "\n";
+        std::cout << "Translated VA to PA: " << physicalAddress << "\n";
+    } else {
+        std::cout << "Page fault! VPN " << vpn << " not mapped.\n";
+    }
+}
+
+// Definition without the default argument
+int generateRandomValues(int min, int max, int multiple) {
+    int randomValue = rand() % (max - min + 1) + min;
+
+    if (multiple > 0) {
+        // Ensure the value is a multiple of 'multiple'
+        randomValue = (randomValue / multiple) * multiple;
+    }
+
+    return randomValue;
 }

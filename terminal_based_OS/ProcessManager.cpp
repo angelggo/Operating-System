@@ -4,9 +4,13 @@
 #include <algorithm>  // For sorting
 #include <vector>
 #include <unordered_set>
+#include "config.h"
 
 void ProcessManager::createProcess(const std::string& name) {
     Process new_process(name);
+
+    allocatePageTable(new_process,4, nextFreeFrame);
+
     processes.push_back(new_process);
     std::cout << "Process \"" << name << "\" created.\n";
 }
@@ -142,8 +146,12 @@ void ProcessManager::runTasks() {
             displayProcesesWhileExecution();
             // Output the currently running process
             std::cout << "\nCurrently Running Process: " << currentRunningProcess.getName() << " (PID: " << currentRunningProcess.getPid() << ")\n";
+            
+            //Translates the virtual addres to physcal memory when process is running
+            //The virtual address required changes randomly for simulation purposes:
+            translateVirtualToPhysicalMemory(currentRunningProcess, generateRandomValues(1000, VIRTUAL_MEMORY_SIZE));
 
-            screenSleep(1000);
+            screenSleep(3000);
 
 
 

@@ -3,10 +3,27 @@
 
 #include <string>
 #include <chrono>
+#include <unordered_map>
+
+struct PageTableEntry {
+    int frameNumber;
+    bool valid;
+    bool dirty;
+};
+
+class PageTable {
+    public:
+        std::unordered_map<int, PageTableEntry> entries;
+    };
+
+
 
 class Process {
 public:
     Process(const std::string& name);  // Constructor to set pid, name, and arrival_time
+
+    //Added a Page table object to each process
+    PageTable pageTable;
 
     void displayInfo() const;
     void run();  // Simulates running the process
@@ -50,5 +67,7 @@ private:
     // Declaration with the default argument
     static int generateRandomValue(int min, int max, int multiple = 0);
 };
+
+
 
 #endif

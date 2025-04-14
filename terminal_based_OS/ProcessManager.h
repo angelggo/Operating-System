@@ -24,6 +24,7 @@ public:
 
 
     int cycles = 0;
+    int nextFreeFrame = 0;  //Used for allocation purposes for page
     void createProcess(const std::string& name);  
     void displayProcessInfo(const std::string& name) const;
     void runProcess(const std::string& name);  

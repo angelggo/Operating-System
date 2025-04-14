@@ -8,6 +8,7 @@
 #include <thread>
 #include <filesystem>
 #include "ProcessManager.h"
+#include "Process.h"
 
 
 #ifdef _WIN32
@@ -28,11 +29,13 @@ void clearScreen();
 void displayAsciiArt(const std::string& folderName, const std::string& fileName);
 void displayBootingAnimation();
 std::string getPassword();
-void displayLogin(std::string* username, std::string* password);
+void displayLogin(std::string* username, std::string* password); 
 void idle(std::string* command, ProcessManager manager);
 void displayCommands();
 void displayProcessAnimation();
 void screenSleep(int amount);
-
+void allocatePageTable(Process& proc, int numPages, int& nextFreeFrame);
+void translateVirtualToPhysicalMemory(Process& process, int virtualAddress);
+int generateRandomValues(int min, int max, int multiple = 0);
 
 #endif // FUNCTIONS_H
