@@ -72,8 +72,16 @@
             > int turnaround_time;  Total time from arrival to completion.
             > int priority; → Priority level (lower number = higher priority).
             > string state; → Current state of the process ("New", "Ready", "Running", "Blocked", "Terminated").
-    
-    
+
+
+# Virtual Memory (Deliverable Part #3)
+    # Whats new? 
+        🔹 Virtual Memory Simulation
+        🔹 Page Tables implementation
+        🔹 Page table allocations
+        🔹 Virtual memory to Physical Memory Translation
+        🔹 Simulation display showing virtual translations, frames and offsset.
+
 
 
 
